@@ -1,0 +1,35 @@
+server:
+  port: 8081
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  datasource:
+    url: jdbc:postgresql://localhost/routes
+    username: postgres
+    password: 1
+  flyway:
+    url: jdbc:postgresql://localhost/routes
+    user: postgres
+    password: 1
+    schemas: routes
+    enabled: true
+
+  jpa:
+    #show-sql: true
+    #generate-ddl: true
+    #hibernate:
+    #  ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  application:
+    name: generator
+
+springfox:
+  documentation:
+    swagger-ui:
+      base-url: generator-docs
+    swagger:
+      v2:
+        path: generator-docs

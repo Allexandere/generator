@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+
+  db:
+    image: "postgres:alpine"
+    container_name: db
+    volumes:
+      - generator-data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: routes
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+  back:
+    build:
+      context: ../.
+      dockerfile: ./docker/Dockerfile
+    image: generator
+    container_name: generator
+    environment:
+      DB_SERVER: db
+      POSTGRES_DB: routes
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "8081:8081"
+    links:
+      - db
+    depends_on:
+      - db
+
+volumes:
+  generator-data:
