@@ -15,5 +15,4 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      working-directory: .
-      run: docker build . --file /docker/Dockerfile.dev --tag generator:$(date +%s)
+      run: docker build . --file ${{github.workspace}}/Dockerfile.dev --tag generator:$(date +%s)
