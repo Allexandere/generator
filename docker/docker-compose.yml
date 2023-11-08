@@ -17,7 +17,7 @@ services:
   back:
     build:
       context: ../.
-      dockerfile: ./docker/Dockerfile
+      dockerfile: ./docker/Dockerfile.dev
     image: generator
     container_name: generator
     environment:
