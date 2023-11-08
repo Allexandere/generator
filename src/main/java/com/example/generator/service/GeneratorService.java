@@ -17,7 +17,6 @@ import org.springframework.util.ResourceUtils;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileReader;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -61,18 +60,34 @@ public class GeneratorService {
         clearTables();
         List<CityEntity> savedCities = generateCities(generateRequest);
         for (int i = 0; i < generateRequest.getAmountOfRecords(); i++) {
-            CityEntity randomCity = savedCities.get(rand.nextInt(savedCities.size()));
-            DepartureEntity departureToSave = getRandomDeparture(randomCity);
+            int randomDepartureCityId = rand.nextInt(savedCities.size());
+            int randomArrivalCityId = getRandomArrivalCityId(savedCities, randomDepartureCityId);
+            DepartureEntity departureToSave = getRandomDeparture(savedCities.get(randomDepartureCityId), savedCities.get(randomArrivalCityId));
             departuresRepository.save(departureToSave);
         }
     }
 
-    private DepartureEntity getRandomDeparture(CityEntity randomCity) {
+    private int getRandomArrivalCityId(List<CityEntity> savedCities, int randomDepartureCityId) {
+        int size = savedCities.size();
+        if (randomDepartureCityId == 0) {
+            return rand.nextInt(size);
+        }
+        int leftPool = rand.nextInt(randomDepartureCityId);
+        int rightPool = rand.nextInt(randomDepartureCityId, size);
+        if (rand.nextInt(2) == 0) {
+            return leftPool;
+        }
+        return rightPool;
+    }
+
+    private DepartureEntity getRandomDeparture(CityEntity randomDepartureCity, CityEntity randomArrivalCity) {
         return new DepartureEntity(
                 TransportType.getByCode(rand.nextInt(3)),
                 LocalDateTime.now().plusDays(rand.nextInt(366)).plus(rand.nextInt(25), ChronoUnit.HOURS),
-                Duration.ofHours(rand.nextInt(1, 51)).plus(Duration.ofMinutes(rand.nextInt(60))),
-                randomCity
+                rand.nextInt(10, 650),
+                randomDepartureCity,
+                randomArrivalCity,
+                rand.nextInt(10000)
         );
     }
 

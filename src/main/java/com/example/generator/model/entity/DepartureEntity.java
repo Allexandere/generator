@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -23,18 +22,27 @@ public class DepartureEntity extends ComparableEntity {
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime departureDate;
     @Column(name = "travel_time")
-    private Duration travelTime;
+    private Integer travelTime;
+    @Column(name = "price")
+    private Integer price;
     @ManyToOne
-    @JoinColumn(name = "city_id")
-    private CityEntity city;
+    @JoinColumn(name = "departure_city_id")
+    private CityEntity departureCity;
+    @ManyToOne
+    @JoinColumn(name = "arrival_city_id")
+    private CityEntity arrivalCity;
 
     public DepartureEntity(TransportType transportType,
                            LocalDateTime departureDate,
-                           Duration travelTime,
-                           CityEntity city) {
+                           Integer travelTime,
+                           CityEntity departureCity,
+                           CityEntity arrivalCity,
+                           Integer price) {
         this.transportType = transportType;
         this.departureDate = departureDate;
         this.travelTime = travelTime;
-        this.city = city;
+        this.departureCity = departureCity;
+        this.arrivalCity = arrivalCity;
+        this.price = price;
     }
 }

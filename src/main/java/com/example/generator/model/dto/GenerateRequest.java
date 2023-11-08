@@ -8,6 +8,6 @@ import lombok.Data;
 public class GenerateRequest {
     @Schema(example = "1")
     private Integer amountOfRecords;
-    @Schema(example = "1")
+    @Schema(example = "2")
     private Integer amountOfCities;
 }
