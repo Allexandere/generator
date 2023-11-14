@@ -11,10 +11,10 @@ import java.util.UUID;
 @Entity
 @Table(name = "departures", schema = "routes")
 @NoArgsConstructor
+@Getter
 public class DepartureEntity extends ComparableEntity {
     @Id
     @GeneratedValue
-    @Getter
     private UUID id;
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "transport_type")

@@ -1,6 +1,7 @@
 package com.example.generator.controller;
 
 import com.example.generator.model.dto.GenerateRequest;
+import com.example.generator.model.pojo.DepartureGraph;
 import com.example.generator.service.GeneratorService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -20,8 +21,8 @@ public class GeneratorController {
     @PostMapping(path = "/generate")
     @ApiOperation("Generate records in table of departures and cities")
     @ApiResponse(code = 400, message = "Amount of records or cities value is invalid (must be positive, not zero, more than 1 for cities)")
-    public void generate(@RequestBody GenerateRequest generateRequest) {
-        generatorService.generateRecords(generateRequest);
+    public DepartureGraph generate(@RequestBody GenerateRequest generateRequest) {
+        return generatorService.generateRecords(generateRequest);
     }
 
 }

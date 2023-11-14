@@ -1,17 +1,18 @@
-package com.example.generator.model.dto;
+package com.example.generator.model.pojo;
 
 import com.example.generator.model.TransportType;
-import lombok.Builder;
 import lombok.Data;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
-@Builder
 public class Departure {
+    private UUID id;
     private TransportType transportType;
     private LocalDateTime departureDate;
-    private Duration travelTime;
-    private String departureCityName;
+    private Integer travelTime;
+    private Integer price;
+    private Long departureCity;
+    private Long arrivalCity;
 }

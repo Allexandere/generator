@@ -1,5 +1,6 @@
 package com.example.generator.model.entity;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -7,6 +8,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "cities", schema = "routes")
 @NoArgsConstructor
+@Getter
 public class CityEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
