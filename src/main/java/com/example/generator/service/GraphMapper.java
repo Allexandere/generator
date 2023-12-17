@@ -32,11 +32,11 @@ public class GraphMapper extends ModelMapper {
         return new DepartureGraph(cities, departures);
     }
 
-    private List<Departure> mapDepartures(List<DepartureEntity> savedDepartures) {
+    public List<Departure> mapDepartures(List<DepartureEntity> savedDepartures) {
         return savedDepartures.stream().map(departureEntity -> this.map(departureEntity, Departure.class)).toList();
     }
 
-    private List<City> mapCities(List<CityEntity> savedCities) {
+    public List<City> mapCities(List<CityEntity> savedCities) {
         return savedCities.stream().map(cityEntity -> this.map(cityEntity, City.class)).toList();
     }
 }

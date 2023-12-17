@@ -35,10 +35,11 @@ public class GeneratorService {
     private final GraphMapper graphMapper;
 
     private final static int CITY_NAME_INDEX = 9;
+    private final static int CITY_TIMEZONE_INDEX = 19;
     private final static String CITY_CSV_FILE_PATH = "classpath:city.csv";
     private final static Random rand = new Random();
 
-    private final List<String> cityNames = new ArrayList<>();
+    private final List<CityCandidate> cityNames = new ArrayList<>();
 
     @SneakyThrows
     @PostConstruct
@@ -47,9 +48,11 @@ public class GeneratorService {
         try (CSVReader csvReader = new CSVReader(new FileReader(file))) {
             String[] values;
             while ((values = csvReader.readNext()) != null) {
-                String cityName = Arrays.asList(values).get(CITY_NAME_INDEX);
+                List<String> lineAsList = Arrays.asList(values);
+                String cityName = lineAsList.get(CITY_NAME_INDEX);
+                String timeZone = lineAsList.get(CITY_TIMEZONE_INDEX);
                 if (isNotEmpty(cityName)) {
-                    cityNames.add(cityName);
+                    cityNames.add(new CityCandidate(cityName, timeZone));
                 }
             }
         }
@@ -60,8 +63,10 @@ public class GeneratorService {
         generatorRequestValidator.validate(generateRequest);
         log.info("Got valid " + generateRequest + ". Clearing tables.");
         clearTables();
+        //Генерация городов
         List<CityEntity> savedCities = generateCities(generateRequest);
         List<DepartureEntity> savedDepartures = new ArrayList<>();
+        //Генерация отправлений из городов
         for (int i = 0; i < generateRequest.getAmountOfRecords(); i++) {
             int randomDepartureCityId = rand.nextInt(savedCities.size());
             int randomArrivalCityId = getRandomArrivalCityId(savedCities, randomDepartureCityId);
@@ -97,21 +102,23 @@ public class GeneratorService {
 
     private List<CityEntity> generateCities(GenerateRequest generateRequest) {
         List<CityEntity> savedCities = new ArrayList<>();
-        Set<String> cityNamesCandidates = getCityNameCandidates(generateRequest);
-        for (String cityName : cityNamesCandidates) {
-            savedCities.add(citiesRepository.save(new CityEntity(cityName)));
+        Set<CityCandidate> cityCandidates = getCityCandidates(generateRequest);
+        for (CityCandidate cityCandidate : cityCandidates) {
+            CityEntity cityEntity = new CityEntity(cityCandidate.name, cityCandidate.timezone);
+            CityEntity savedCity = citiesRepository.save(cityEntity);
+            savedCities.add(savedCity);
         }
         return savedCities;
     }
 
-    private Set<String> getCityNameCandidates(GenerateRequest generateRequest) {
-        Set<String> cityNamesCandidates = new HashSet<>();
+    private Set<CityCandidate> getCityCandidates(GenerateRequest generateRequest) {
+        Set<CityCandidate> cityNamesCandidates = new HashSet<>();
         for (int i = 0; i < generateRequest.getAmountOfCities(); i++) {
-            String cityName = cityNames.get(rand.nextInt(cityNames.size()));
-            if (cityNamesCandidates.contains(cityName)) {
+            CityCandidate city = cityNames.get(rand.nextInt(cityNames.size()));
+            if (cityNamesCandidates.contains(city)) {
                 i--;
             } else {
-                cityNamesCandidates.add(cityName);
+                cityNamesCandidates.add(city);
             }
         }
         return cityNamesCandidates;
@@ -121,5 +128,7 @@ public class GeneratorService {
         departuresRepository.deleteAll();
         citiesRepository.deleteAll();
     }
+
+    private record CityCandidate(String name, String timezone) {}
 
 }

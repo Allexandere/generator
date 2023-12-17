@@ -6,4 +6,5 @@ import lombok.Data;
 public class City {
     private Long id;
     private String cityName;
+    private String timeZone;
 }

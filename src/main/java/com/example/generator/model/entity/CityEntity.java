@@ -16,7 +16,11 @@ public class CityEntity {
     @Column(name = "city_name")
     private String cityName;
 
-    public CityEntity(String cityName) {
+    @Column(name = "timezone")
+    private String timeZone;
+
+    public CityEntity(String cityName, String timeZone) {
         this.cityName = cityName;
+        this.timeZone = timeZone;
     }
 }
